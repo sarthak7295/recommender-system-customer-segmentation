@@ -1,2 +1,2 @@
 # recommender-system-customer-segmentation
-jkb
+We aim to design a recommender sytem based on customer segmentation analysis
