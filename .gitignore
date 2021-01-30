@@ -12,6 +12,8 @@ build/
 develop-eggs/
 dist/
 downloads/
+dataset/*.csv
+dataset/*.zip
 eggs/
 .eggs/
 lib/
