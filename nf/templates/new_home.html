@@ -40,7 +40,7 @@
 
         <p id="cust_old_div">
             <label>Choose a customer :</label>
-            <select name="customerId" id="customerId">
+            <select name="customerId" id="customerId" onchange="changeFunc();">
 
             </select>
         </p>
@@ -48,6 +48,9 @@
             <label for="customerIdNew">Name:</label>
             <input type="text" id="customerIdNew" name="customerIdNew">
         </p>
+        <br><br>
+        <label for="myCheck">Enable editing values:</label>
+        <input type="checkbox" id="myCheck" onclick="enableEditing()">
         <br><br>
         <label for="recency">Recency:</label>
         <input type="text" id="recency" name="recency">&nbsp;&nbsp;
@@ -104,7 +107,7 @@
 var arr = [];
 var segment_arr = [];
 
-
+var jsonData;
 
 
 class Customer {
@@ -127,7 +130,15 @@ class Customer {
         var  mon = document.getElementById("monetary").value;
         var  cluster = document.getElementById("segment").value;
         var  custId
-
+        if (!rec) {
+               rec=2000;
+        }
+        if (!freq) {
+               freq=2000;
+        }
+        if (!mon) {
+               mon=2000;
+        }
         if(document.getElementById('new').checked) {
                 custId = document.getElementById("customerIdNew").value;
         }
@@ -165,15 +176,43 @@ function changeTheType() {
   }
 }
 
+function changeFunc() {
+  var selected_user = document.getElementById("customerId").value;
+
+  for (var i = 0; i < jsonData.length; i++) {
+    var counter = jsonData[i];
+    if(selected_user.localeCompare(counter.Client)==0){
+    document.getElementById("recency").value=counter.Rank_Recency;
+    document.getElementById("frequency").value=counter.Rank_Frequency;
+    document.getElementById("monetary").value=counter.Rank_Monetary;
+    document.getElementById("segment").value=counter.Cluster;
+    };
+}
+
+}
+
+function enableEditing() {
+
+document.getElementById("recency").disabled = !document.getElementById("recency").disabled;
+document.getElementById("frequency").disabled = !document.getElementById("frequency").disabled;
+document.getElementById("monetary").disabled = !document.getElementById("monetary").disabled;
+document.getElementById("segment").disabled = !document.getElementById("segment").disabled;
+}
 
 document.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("recency").disabled = true;
+document.getElementById("frequency").disabled = true;
+document.getElementById("monetary").disabled = true;
+document.getElementById("segment").disabled = true;
+
 var users;
 var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", $SCRIPT_ROOT+'/get/users', false ); // false for synchronous request
     xmlHttp.send( null );
-    users = xmlHttp.responseText;
-var jsonData = JSON.parse(users);
+    var users = xmlHttp.responseText;
+    jsonData = JSON.parse(users);
 
 for (var i = 0; i < jsonData.length; i++) {
     var counter = jsonData[i];
